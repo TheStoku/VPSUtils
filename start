@@ -24,11 +24,13 @@ function Start(){
         echo "Autostarter and DEcho enabled."
     elif [ "$3" = "-off" ]; then
         echo "Autostarter and DEcho disabled."
+        screen -AmdS "${server}" ./${path}/Server.bin
+        return 1
     fi
 
-	if [ -d $path ]; then	
+	if [ -d $path ]; then
         echo "Found path \"${path}\", starting."
-		/bin/bash "${path}/VPSUtils/watcher" --start "${path}" -"${3}"
+		/bin/bash "${path}/VPSUtils/watcher" --start "${path}" "${server}" -"${3}"
         return 1
 	else
 		echo "Path \"${path}\" not found."
