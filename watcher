@@ -6,32 +6,23 @@
 
 this_script_name=${0##*/}
 timer=3
-mode=""
-server_path=""
+server_path="$2"
+server_name="$3"
+mode="$4"
 run_echo_script="echo_buffer.sh"
 
-IFS='/'
-#Read the split words into an array based on comma delimiter
-read -a buffer <<< "$server_path"
-server_name="${buffer[1]}"
-
-if [ -z "$2" ]; then
-    echo "watcher: default mode rd"
+if [ -z "$4" ]; then
+    echo "watcher: setting default mode rd"
     mode="-rd"
 else
-    echo "watcher: setting mode ${2}"
-    mode="$2"
+    echo "watcher: setting mode ${4}"
+    mode="$4"
 fi
 
 if [ "$1" = "--start" ]; then
     #> ${run_echo_script}
 	#screen -ls
-    if [ "$mode" = "-off" ]; then
-        echo "watcher: starting -off mode"
-        screen -AmdS "${server_name}" ./Server.bin
-    else
-        screen -AmdS ${server_name}_watcher watch -n $timer ./${this_script_name} --loop
-    fi
+    screen -AmdS ${server_name}_watcher watch -n $timer ./${this_script_name} --loop
 elif [ "$1" = "--stop" ]; then
 	screen -X -S ${server_name}_watcher quit
     screen -X -S ${server_name} quit
