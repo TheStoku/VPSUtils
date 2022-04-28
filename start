@@ -1,4 +1,5 @@
 #!/bin/sh
+
 # Starting script
 # Author: Stoku
 # Copyright 2022
@@ -11,6 +12,7 @@ function Start(){
     options=$3
 
     echo "Trying to start server \"$server\" as \"$user\"."
+    path="/home/$user/$server"
     
     if [ -z $3 ]; then
         echo "Default startup parameters (Autostarter and DEcho enabled)."
@@ -22,12 +24,11 @@ function Start(){
         echo "Autostarter and DEcho enabled."
     elif [ $3 = "-off" ]; then
         echo "Autostarter and DEcho disabled."
-        path="/home/$user/$server"
     fi
 
 	if [ -d $path ]; then	
         echo "Found path \"$path\", starting."
-		/bin/bash "$path/watch.sh" --start 
+		/bin/bash "$path/VPSUtils/watcher.sh" --start "$path" -"$3"
 	else
 		echo "Path \"$path\" not found."
 	fi
