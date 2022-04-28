@@ -1,0 +1,65 @@
+#!/bin/sh
+
+# Watch script
+# Author: Stoku, XenoN
+# Copyright 2022
+
+this_script_name=${0##*/}
+timer=3
+mode=""
+server_path=""
+run_echo_script="echo_buffer.sh"
+
+IFS='/'
+#Read the split words into an array based on comma delimiter
+read -a buffer <<< "$server_path"
+server_name="${buffer[1]}"
+
+if [ -z "$2" ]; then
+    echo "watcher: default mode rd"
+    mode="-rd"
+else
+    echo "watcher: setting mode ${2}"
+    mode="$2"
+fi
+
+if [ "$1" = "--start" ]; then
+    #> ${run_echo_script}
+	#screen -ls
+    if [ "$mode" = "-off" ]; then
+        echo "watcher: starting -off mode"
+        screen -AmdS "${server_name}" ./Server.bin
+    else
+        screen -AmdS ${server_name}_watcher watch -n $timer ./${this_script_name} --loop
+    fi
+elif [ "$1" = "--stop" ]; then
+	screen -X -S ${server_name}_watcher quit
+    screen -X -S ${server_name} quit
+	screen -ls
+elif [ "$1" = "--loop" ]; then
+    if [ "$mode" = "-d" ] || [ "$mode" = "-rd" ]; then
+	    ./${run_echo_script}
+        #> ${run_echo_script}
+    elif [ "$mode" = "-r" ] || [ "$mode" = "-rd" ]; then
+        if ! screen -list | grep -q "${server_name}"; then
+            echo "Autorestarter: process ${server_path} not found. Restarting."
+    	    screen -AmdS ${server_name} ./Server.bin
+        fi
+    fi
+else
+	echo "Usage:"
+	echo "[--start] - uruchamia pętlę co ${timer} sekund/y w screen pod nazwą ${server}_discord_watch"
+	echo "[--stop]  - ubija pętlę"
+	echo "[--loop]  - do użytku przez skrypt | Parametr testowy; uruchamia plik ${run_script}"
+	echo "            i czyści jego zawartość"
+fi
+
+function find_screen {
+    if screen -ls "$1" | grep -o "^\s*[0-9]*\.$1[ "$'\t'"](" --color=NEVER -m 1 | grep -oh "[0-9]*\.$1" --color=NEVER -m 1 -q >/dev/null; then
+        screen -ls "$1" | grep -o "^\s*[0-9]*\.$1[ "$'\t'"](" --color=NEVER -m 1 | grep -oh "[0-9]*\.$1" --color=NEVER -m 1 2>/dev/null
+        return 0
+    else
+        echo "$1"
+        return 1
+    fi
+}
