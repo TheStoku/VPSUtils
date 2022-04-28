@@ -1,5 +1,5 @@
 #!/bin/bash
-# Watcher script
+# Watch script
 # Author: Stoku, XenoN
 # Copyright 2022
 
@@ -24,35 +24,35 @@ else
 fi
 
 if [ "$1" = "--start" ]; then
-    > "${server_path}"/VPSUtils/${run_echo_script}  #cleanup
+    > "${server_path}/VPSUtils/${run_echo_script}"  #cleanup
 	
     # Start watcher
     if ! screen -ls | grep -w -q "${server_name}_watcher"; then
-    	    screen -AmdS ${server_name}_watcher watch -n $timer /bin/bash "${server_path}"/VPSUtils/${this_script_name} --loop "$server_path" "$server_name" "$mode"
+    	    screen -AmdS "${server_name}_watcher" watch -n $timer /bin/bash "${server_path}/VPSUtils/${this_script_name}" --loop "$server_path" "$server_name" "$mode"
     fi
     # Start server
     if ! screen -ls | grep -w -q "${server_name}"; then
-    	    screen -AmdS ${server_name} /bin/bash "${server_path}"/Server.bin
+    	    screen -AmdS "${server_name}" /bin/bash "${server_path}/Server.bin"
     fi
     
     echo ""
     screen -ls
 
 elif [ "$1" = "--stop" ]; then
-	screen -X -S "${server_name}"_watcher quit
-    screen -X -S ${server_name} quit
+	screen -X -S "${server_name}_watcher" quit
+    screen -X -S "${server_name}" quit
 	screen -ls
 
 elif [ "$1" = "--loop" ]; then
     if [ "$mode" = "-d" ] || [ "$mode" = "-ad" ]; then
         echo "${server_path}"
-	    /bin/bash "${server_path}"/VPSUtils/${run_echo_script}
-        > "${server_path}"/VPSUtils/${run_echo_script}
+	    /bin/bash "${server_path}/VPSUtils/${run_echo_script}"
+        > "${server_path}/VPSUtils/${run_echo_script}"
     fi
     if [ "$mode" = "-a" ] || [ "$mode" = "-ad" ]; then
         if ! screen -ls | grep -w -q "${server_name}"; then
-            echo "Autorestarter: process ${server_path} not found. Restarting."
-    	    screen -AmdS ${server_name} /bin/bash "${server_path}"/Server.bin
+            echo "Autorestarter: process \"${server_path}/Server.bin\" not found. Restarting."
+    	    screen -AmdS "${server_name}" /bin/bash "${server_path}/Server.bin"
         fi
     fi
 else
