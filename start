@@ -1,4 +1,5 @@
 #!/bin/bash
+#!/bin/sh
 # Starting script
 # Author: Stoku
 # Copyright 2022
@@ -28,9 +29,13 @@ function Start() {
     fi
 
 	if [ -d $path ]; then
-        echo "Found path \"${path}\", starting."
-		/bin/bash "${path}/VPSUtils/watcher" --start "${path}" "${server}" "${3}"
-        return 1
+        if ! screen -ls | grep -w -q "${server_name}"; then
+            echo "Found path \"${path}\", starting."
+		    /bin/bash "${path}/VPSUtils/watcher" --start "${path}" "${server}" "${3}"
+            return 1
+        else
+            echo "${server} is already running."
+        fi
 	else
 		echo "Path \"${path}\" not found."
         return 0
@@ -42,9 +47,9 @@ function print_help(){
 	echo "start [dir] [options]"
     echo ""
     echo "Options:"
-    echo "-r    - enable Autorestarter"
+    echo "-a    - enable Autorestarter"
     echo "-d    - enable DEcho"
-    echo "-rd   - enable Autorestarter and DEcho"
+    echo "-ad   - enable Autorestarter and DEcho"
     echo "-off  - disable Autorestarter and DEcho"
     echo "Default: -re"
 }
