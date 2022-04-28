@@ -1,6 +1,5 @@
-#!/bin/sh
-
-# Watch script
+#!/bin/bash
+# Watcher script
 # Author: Stoku, XenoN
 # Copyright 2022
 
@@ -11,30 +10,49 @@ server_name="$3"
 mode="$4"
 run_echo_script="echo_buffer.sh"
 
+echo "Current watcher state: ${1}"
+echo "Server path: ${2}"
+echo "Server name: ${3}"
+echo "Mode: ${4}"
+
 if [ -z "$4" ]; then
-    echo "watcher: setting default mode rd"
-    mode="-rd"
+    echo "No mode specified. Setting default mode -ad"
+    mode="-ad"
 else
-    echo "watcher: setting mode ${4}"
+    #echo "watcher: setting mode ${4}"
     mode="$4"
 fi
 
 if [ "$1" = "--start" ]; then
-    #> ${run_echo_script}
-	#screen -ls
-    screen -AmdS ${server_name}_watcher watch -n $timer ./${this_script_name} --loop
+    > "${server_path}"/VPSUtils/${run_echo_script}  #cleanup
+	
+    # Start watcher
+    if ! screen -ls | grep -w -q "${server_name}_watcher"; then
+    	    screen -AmdS ${server_name}_watcher watch -n $timer /bin/bash "${server_path}"/VPSUtils/${this_script_name} --loop "$server_path" "$server_name" "$mode"
+    fi
+    # Start server
+    if ! screen -ls | grep -w -q "${server_name}"; then
+    	    screen -AmdS ${server_name} /bin/bash "${server_path}"/Server.bin
+    fi
+    
+    echo ""
+    screen -ls
+
 elif [ "$1" = "--stop" ]; then
-	screen -X -S ${server_name}_watcher quit
+	screen -X -S "${server_name}"_watcher quit
     screen -X -S ${server_name} quit
 	screen -ls
+
 elif [ "$1" = "--loop" ]; then
-    if [ "$mode" = "-d" ] || [ "$mode" = "-rd" ]; then
-	    ./${run_echo_script}
-        #> ${run_echo_script}
-    elif [ "$mode" = "-r" ] || [ "$mode" = "-rd" ]; then
-        if ! screen -list | grep -q "${server_name}"; then
+    if [ "$mode" = "-d" ] || [ "$mode" = "-ad" ]; then
+        echo "${server_path}"
+	    /bin/bash "${server_path}"/VPSUtils/${run_echo_script}
+        > "${server_path}"/VPSUtils/${run_echo_script}
+    fi
+    if [ "$mode" = "-a" ] || [ "$mode" = "-ad" ]; then
+        if ! screen -ls | grep -w -q "${server_name}"; then
             echo "Autorestarter: process ${server_path} not found. Restarting."
-    	    screen -AmdS ${server_name} ./Server.bin
+    	    screen -AmdS ${server_name} /bin/bash "${server_path}"/Server.bin
         fi
     fi
 else
@@ -44,13 +62,3 @@ else
 	echo "[--loop]  - do użytku przez skrypt | Parametr testowy; uruchamia plik ${run_script}"
 	echo "            i czyści jego zawartość"
 fi
-
-function find_screen {
-    if screen -ls "$1" | grep -o "^\s*[0-9]*\.$1[ "$'\t'"](" --color=NEVER -m 1 | grep -oh "[0-9]*\.$1" --color=NEVER -m 1 -q >/dev/null; then
-        screen -ls "$1" | grep -o "^\s*[0-9]*\.$1[ "$'\t'"](" --color=NEVER -m 1 | grep -oh "[0-9]*\.$1" --color=NEVER -m 1 2>/dev/null
-        return 0
-    else
-        echo "$1"
-        return 1
-    fi
-}
