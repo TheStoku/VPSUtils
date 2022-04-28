@@ -1,0 +1,53 @@
+#!/bin/sh
+# Starting script
+# Author: Stoku
+# Copyright 2022
+
+#start [dir] [options] //[username]
+
+function Start(){
+    user=$1
+    server=$2
+    options=$3
+
+    echo "Trying to start server \"$server\" as \"$user\"."
+    
+    if [ -z $3 ]; then
+        echo "Default startup parameters (Autostarter and DEcho enabled)."
+    elif [ $3 = "-r" ]; then
+        echo "Autorestarter enabled."
+    elif [ $3 = "-e" ]; then
+        echo "DEcho enabled."
+    elif [ $3 = "-re" ]; then
+        echo "Autostarter and DEcho enabled."
+    elif [ $3 = "-off" ]; then
+        echo "Autostarter and DEcho disabled."
+        path="/home/$user/$server"
+    fi
+
+	if [ -d $path ]; then	
+        echo "Found path \"$path\", starting."
+		/bin/bash "$path/watch.sh" --start 
+	else
+		echo "Path \"$path\" not found."
+	fi
+}
+
+function print_help(){
+    echo "Start script usage:"
+	echo "start [dir] [options]"
+    echo "\nOptions:"
+    echo "-r    - enable Autorestarter"
+    echo "-e    - enable DEcho"
+    echo "-re   - enable Autorestarter and DEcho"
+    echo "-off  - disable Autorestarter and DEcho"
+    echo "Default: -re"
+}
+
+if [ -z $1 ]; then
+	print_help
+else
+	Start $USER $1 $2
+fi
+
+#ls -d */ list dir
