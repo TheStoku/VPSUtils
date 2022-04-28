@@ -32,7 +32,7 @@ if [ "$1" = "--start" ]; then
     fi
     # Start server
     if ! screen -ls | grep -w -q "${server_name}"; then
-    	    screen -AmdS "${server_name}" /bin/bash "${server_path}/Server.bin"
+    	    screen -AmdS "${server_name}" ./${server_path}/Server.bin
     fi
     
     echo ""
@@ -49,10 +49,11 @@ elif [ "$1" = "--loop" ]; then
 	    /bin/bash "${server_path}/VPSUtils/${run_echo_script}"
         > "${server_path}/VPSUtils/${run_echo_script}"
     fi
+
     if [ "$mode" = "-a" ] || [ "$mode" = "-ad" ]; then
         if ! screen -ls | grep -w -q "${server_name}"; then
             echo "Autorestarter: process \"${server_path}/Server.bin\" not found. Restarting."
-    	    screen -AmdS "${server_name}" /bin/bash "${server_path}/Server.bin"
+    	    screen -AmdS "${server_name}" ./${server_path}/Server.bin
         fi
     fi
 else
