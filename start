@@ -11,8 +11,8 @@ function Start(){
     server=$2
     options=$3
 
-    echo "Trying to start server \"$server\" as \"$user\"."
-    path="/home/$user/$server"
+    echo "Trying to start server \"${server}\" as \"${user}\"."
+    path="/home/${user}/${server}"
     
     if [ -z $3 ]; then
         echo "Default startup parameters (Autostarter and DEcho enabled)."
@@ -27,10 +27,12 @@ function Start(){
     fi
 
 	if [ -d $path ]; then	
-        echo "Found path \"$path\", starting."
-		/bin/bash "$path/VPSUtils/watcher.sh" --start "$path" -"$3"
+        echo "Found path \"${path}\", starting."
+		/bin/bash "${path}/VPSUtils/watcher.sh" --start "${path}" -"${3}"
+        return 1
 	else
-		echo "Path \"$path\" not found."
+		echo "Path \"${path}\" not found."
+        return 0
 	fi
 }
 
