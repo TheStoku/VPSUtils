@@ -7,22 +7,22 @@
 #start [dir] [options] //[username]
 
 function Start(){
-    user=$1
-    server=$2
-    options=$3
+    user="$1"
+    server="$2"
+    options="$3"
 
     echo "Trying to start server \"${server}\" as \"${user}\"."
     path="/home/${user}/${server}"
     
-    if [ -z $3 ]; then
+    if [ -z "$3" ]; then
         echo "Default startup parameters (Autostarter and DEcho enabled)."
-    elif [ $3 = "-r" ]; then
+    elif [ "$3" = "-r" ]; then
         echo "Autorestarter enabled."
-    elif [ $3 = "-e" ]; then
+    elif [ "$3" = "-e" ]; then
         echo "DEcho enabled."
-    elif [ $3 = "-re" ]; then
+    elif [ "$3" = "-re" ]; then
         echo "Autostarter and DEcho enabled."
-    elif [ $3 = "-off" ]; then
+    elif [ "$3" = "-off" ]; then
         echo "Autostarter and DEcho disabled."
     fi
 
