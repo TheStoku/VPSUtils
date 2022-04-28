@@ -1,12 +1,12 @@
+#!/bin/bash
 #!/bin/sh
-
 # Starting script
 # Author: Stoku
 # Copyright 2022
 
 #start [dir] [options] //[username]
 
-function Start(){
+function Start() {
     user="$1"
     server="$2"
     options="$3"
@@ -30,7 +30,7 @@ function Start(){
 
 	if [ -d $path ]; then
         echo "Found path \"${path}\", starting."
-		/bin/bash "${path}/VPSUtils/watcher" --start "${path}" "${server}" -"${3}"
+		/bin/bash "${path}/VPSUtils/watcher" --start "${path}" "${server}" "${3}"
         return 1
 	else
 		echo "Path \"${path}\" not found."
@@ -41,7 +41,8 @@ function Start(){
 function print_help(){
     echo "Start script usage:"
 	echo "start [dir] [options]"
-    echo "\nOptions:"
+    echo ""
+    echo "Options:"
     echo "-r    - enable Autorestarter"
     echo "-d    - enable DEcho"
     echo "-rd   - enable Autorestarter and DEcho"
