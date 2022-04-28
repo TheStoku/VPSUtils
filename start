@@ -28,7 +28,7 @@ function Start(){
 
 	if [ -d $path ]; then	
         echo "Found path \"${path}\", starting."
-		/bin/bash "${path}/VPSUtils/watcher.sh" --start "${path}" -"${3}"
+		/bin/bash "${path}/VPSUtils/watcher" --start "${path}" -"${3}"
         return 1
 	else
 		echo "Path \"${path}\" not found."
