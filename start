@@ -18,9 +18,9 @@ function Start(){
         echo "Default startup parameters (Autostarter and DEcho enabled)."
     elif [ "$3" = "-r" ]; then
         echo "Autorestarter enabled."
-    elif [ "$3" = "-e" ]; then
+    elif [ "$3" = "-d" ]; then
         echo "DEcho enabled."
-    elif [ "$3" = "-re" ]; then
+    elif [ "$3" = "-rd" ]; then
         echo "Autostarter and DEcho enabled."
     elif [ "$3" = "-off" ]; then
         echo "Autostarter and DEcho disabled."
@@ -41,8 +41,8 @@ function print_help(){
 	echo "start [dir] [options]"
     echo "\nOptions:"
     echo "-r    - enable Autorestarter"
-    echo "-e    - enable DEcho"
-    echo "-re   - enable Autorestarter and DEcho"
+    echo "-d    - enable DEcho"
+    echo "-rd   - enable Autorestarter and DEcho"
     echo "-off  - disable Autorestarter and DEcho"
     echo "Default: -re"
 }
