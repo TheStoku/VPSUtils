@@ -1,14 +1,16 @@
 #!/bin/bash
-# Watch script
+######################################################
+# Watcher script
 # Author: Stoku, XenoN
 # Copyright 2022
+######################################################
 
 this_script_name=${0##*/}
 timer=3
 server_path="$2"
 server_name="$3"
 mode="$4"
-run_echo_script="echo_buffer.sh"
+run_echo_script=".echo_buffer.sh"
 
 echo "Current watcher state: ${1}"
 echo "Server path: ${2}"
@@ -24,36 +26,38 @@ else
 fi
 
 if [ "$1" = "--start" ]; then
-    > "${server_path}/VPSUtils/${run_echo_script}"  #cleanup
-	
+    > "${server_path}/${run_echo_script}"  #cleanup
+
     # Start watcher
     if ! screen -ls | grep -w -q "${server_name}_watcher"; then
-    	    screen -AmdS "${server_name}_watcher" watch -n $timer /bin/bash "${server_path}/VPSUtils/${this_script_name}" --loop "$server_path" "$server_name" "$mode"
+        echo "Starting \"${server_name}_watcher\" process."
+    	screen -AmdS "${server_name}_watcher" watch -n $timer /bin/bash "/bin/watcher" --loop "$server_path" "$server_name" "$mode"
     fi
     # Start server
     if ! screen -ls | grep -w -q "${server_name}"; then
-    	    screen -AmdS "${server_name}" ./${server_path}/Server.bin
+        echo "Starting \"${server_name}\" process."
+        cd "${server_path}" && screen -AmdS ${server_name} "${server_path}/Server.bin"
     fi
-    
+
     echo ""
     screen -ls
 
 elif [ "$1" = "--stop" ]; then
 	screen -X -S "${server_name}_watcher" quit
-    screen -X -S "${server_name}" quit
+	screen -X -S "${server_name}" quit
 	screen -ls
 
 elif [ "$1" = "--loop" ]; then
     if [ "$mode" = "-d" ] || [ "$mode" = "-ad" ]; then
         echo "${server_path}"
-	    /bin/bash "${server_path}/VPSUtils/${run_echo_script}"
-        > "${server_path}/VPSUtils/${run_echo_script}"
+	cd "${server_path}" && ${server_path}/.echo_buffer.sh
+        > "${server_path}/${run_echo_script}"
     fi
 
     if [ "$mode" = "-a" ] || [ "$mode" = "-ad" ]; then
         if ! screen -ls | grep -w -q "${server_name}"; then
             echo "Autorestarter: process \"${server_path}/Server.bin\" not found. Restarting."
-    	    screen -AmdS "${server_name}" ./${server_path}/Server.bin
+    	    cd "${server_path}" && screen -AmdS ${server_name} "${server_path}/Server.bin"
         fi
     fi
 else
