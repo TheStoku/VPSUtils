@@ -1,7 +1,9 @@
 #!/bin/bash
+######################################################
 # Starting script
 # Author: Stoku
 # Copyright 2022
+######################################################
 
 #start [dir] [options] //[username]
 
@@ -13,27 +15,27 @@ function Start() {
     echo "Trying to start server \"${server}\" as \"${user}\"."
     path="/home/${user}/${server}"
     
-    if [ -z "$3" ]; then
+    if [ -z ${options} ]; then
         echo "Default startup parameters (Autostarter and DEcho enabled)."
-    elif [ "$3" = "-r" ]; then
+    elif [ ${options} = "-a" ]; then
         echo "Autorestarter enabled."
-    elif [ "$3" = "-d" ]; then
+    elif [ ${options} = "-d" ]; then
         echo "DEcho enabled."
-    elif [ "$3" = "-rd" ]; then
+    elif [ ${options} = "-ad" ]; then
         echo "Autostarter and DEcho enabled."
-    elif [ "$3" = "-off" ]; then
+    elif [ ${options} = "-off" ]; then
         echo "Autostarter and DEcho disabled."
-        screen -AmdS "${server}" ./${path}/Server.bin
+        cd "${path}" && screen -AmdS "${server}" ./${path}/Server.bin
         return 1
     fi
 
 	if [ -d $path ]; then
-        if ! screen -ls | grep -w -q "${server_name}"; then
+        if ! screen -ls | grep -w -q "${server}"; then
             echo "Found path \"${path}\", starting."
-		    /bin/bash "${path}/VPSUtils/watcher" --start "${path}" "${server}" "${3}"
+		    /bin/bash /bin/watcher --start "${path}" "${server}" "${options}"
             return 1
         else
-            echo "${server} is already running."
+            echo "\"${server}\" is already running."
         fi
 	else
 		echo "Path \"${path}\" not found."
