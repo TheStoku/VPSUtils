@@ -16,15 +16,15 @@ function Start() {
     path="/home/${user}/${server}"
     
     if [ -z ${options} ]; then
-        echo "Default startup parameters (Autostarter and DEcho enabled)."
+        echo "Default startup parameters (Autostarter and Discord Echo enabled)."
     elif [ ${options} = "-a" ]; then
         echo "Autorestarter enabled."
     elif [ ${options} = "-d" ]; then
         echo "DEcho enabled."
     elif [ ${options} = "-ad" ]; then
-        echo "Autostarter and DEcho enabled."
+        echo "Autostarter and Discord Echo enabled."
     elif [ ${options} = "-off" ]; then
-        echo "Autostarter and DEcho disabled."
+        echo "Autostarter and Discord Echo disabled."
         cd "${path}" && screen -AmdS "${server}" ./${path}/Server.bin
         return 1
     fi
@@ -49,10 +49,10 @@ function print_help(){
     echo ""
     echo "Options:"
     echo "-a    - enable Autorestarter"
-    echo "-d    - enable DEcho"
-    echo "-ad   - enable Autorestarter and DEcho"
-    echo "-off  - disable Autorestarter and DEcho"
-    echo "Default: -re"
+    echo "-d    - enable Discord Echo"
+    echo "-ad   - enable Autorestarter and Discord Echo"
+    echo "-off  - disable Autorestarter and Discord Echo"
+    echo "Default: -ad"
 }
 
 if [ -z $1 ]; then
