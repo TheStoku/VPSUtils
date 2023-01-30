@@ -62,8 +62,7 @@ elif [ "$1" = "--loop" ]; then
     fi
 else
 	echo "Usage:"
-	echo "[--start] - uruchamia pętlę co ${timer} sekund/y w screen pod nazwą ${server}_discord_watch"
-	echo "[--stop]  - ubija pętlę"
-	echo "[--loop]  - do użytku przez skrypt | Parametr testowy; uruchamia plik ${run_script}"
-	echo "            i czyści jego zawartość"
+	echo "[--start] - launch loop every ${timer} seconds under the name ${server}_discord_watch"
+	echo "[--stop]  - kill loop
+	echo "[--loop]  - used only by script ${run_script}, don't use this param!"
 fi
